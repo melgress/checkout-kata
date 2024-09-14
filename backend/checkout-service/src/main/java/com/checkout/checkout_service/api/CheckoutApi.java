@@ -1,5 +1,21 @@
 package com.checkout.checkout_service.api;
 
-public interface CheckoutApi {
+import com.checkout.checkout_service.api.response.CheckoutResponse;
+import com.checkout.checkout_service.model.Item;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.List;
+
+public interface CheckoutApi {
+    @PostMapping("/cart")
+    ResponseEntity<Void> addItemToCart(@RequestBody Item cartItem);
+
+    @GetMapping("/cart")
+    ResponseEntity<List<Item>> getCartItems();
+
+    @PostMapping("/checkout")
+    ResponseEntity<CheckoutResponse> checkout();
 }
