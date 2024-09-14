@@ -3,3 +3,16 @@ CREATE TABLE item (
   name VARCHAR(255) NOT NULL,
   price DECIMAL(10, 2) NOT NULL
 );
+
+CREATE TABLE cart (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY
+);
+
+CREATE TABLE cart_item (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  cart_id BIGINT NOT NULL,
+  item_id BIGINT NOT NULL,
+  quantity INT NOT NULL,
+  FOREIGN KEY (cart_id) REFERENCES cart(id),
+  FOREIGN KEY (item_id) REFERENCES item(id)
+);
