@@ -10,11 +10,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 
 public interface CheckoutApi {
+
+    @GetMapping("/items")
+    ResponseEntity<List<Item>> getItems();
+
     @PostMapping("/cart")
     ResponseEntity<Void> addItemToCart(@RequestBody Item cartItem);
-
-    @GetMapping("/cart")
-    ResponseEntity<List<Item>> getCartItems();
 
     @PostMapping("/checkout")
     ResponseEntity<CheckoutResponse> checkout();

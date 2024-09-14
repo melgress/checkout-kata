@@ -17,16 +17,17 @@ public class CheckoutController implements CheckoutApi{
     public CheckoutController(CheckoutService checkoutService) {
         this.checkoutService = checkoutService;
     }
+
+    @GetMapping("/items")
+    public ResponseEntity<List<Item>> getItems() {
+        List<Item> items = checkoutService.getItems();
+        return ResponseEntity.ok(items);
+    }
+
     @PostMapping("/cart")
     public ResponseEntity<Void> addItemToCart(@RequestBody Item cartItem) {
         checkoutService.addItemToCart(cartItem);
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/cart")
-    public ResponseEntity<List<Item>> getCartItems() {
-        List<Item> items = checkoutService.getCartItems();
-        return ResponseEntity.ok(items);
     }
 
     @PostMapping("/checkout")

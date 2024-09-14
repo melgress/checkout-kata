@@ -8,7 +8,7 @@ import java.util.List;
 public interface CheckoutService {
     void addItemToCart(Item cartItem);
 
-    List<Item> getCartItems();
+    List<Item> getItems();
 
     CheckoutResponse checkout();
 }

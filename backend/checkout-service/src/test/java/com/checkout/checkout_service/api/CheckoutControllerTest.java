@@ -34,7 +34,7 @@ public class CheckoutControllerTest {
 
     @Test
     public void itShouldTestAddItemToCart() throws Exception {
-        Item cartItem = Item.builder().name("Apple").price(3.00).quantity(3).build();
+        Item cartItem = Item.builder().name("Apple").price(3.00).build();
 
         mockMvc.perform(post("/api/v1/cart")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -43,23 +43,24 @@ public class CheckoutControllerTest {
     }
 
     @Test
-    public void itShouldTestGetAllCartItems() throws Exception {
-        Item item1 = Item.builder().name("Banana").price(2.50).quantity(4).build();
-        Item item2 = Item.builder().name("Melon").price(4.50).quantity(2).build();
-        when(cartService.getCartItems()).thenReturn(List.of(item1, item2));
+    public void itShouldTestGetItems() throws Exception {
+        Item item1 = Item.builder().name("Banana").price(2.50).build();
+        Item item2 = Item.builder().name("Melon").price(4.50).build();
+        when(cartService.getItems()).thenReturn(List.of(item1, item2));
 
-        mockMvc.perform(get("/api/v1/cart")
+        mockMvc.perform(get("/api/v1/items")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Banana"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].price").value(2.50))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].quantity").value(4));
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value("Melon"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].price").value(4.50));
     }
 
     @Test
     public void itShouldTestCheckout() throws Exception {
-        Item item1 = Item.builder().name("Banana").price(2.50).quantity(4).build();
-        Item item2 = Item.builder().name("Melon").price(4.50).quantity(2).build();
+        Item item1 = Item.builder().name("Banana").price(2.50).build();
+        Item item2 = Item.builder().name("Melon").price(4.50).build();
         Offer offer = Offer.builder().itemName("Banana").discountPrice(130.0).quantityRequired(3).offerDescription("3 for 130").build();
         CheckoutResponse response = new CheckoutResponse(List.of(item1, item2), 19.0, List.of(offer));
 
