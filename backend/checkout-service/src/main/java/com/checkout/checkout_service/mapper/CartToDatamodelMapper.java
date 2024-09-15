@@ -7,8 +7,6 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface CartToDatamodelMapper {
 
-    CartDataModel mapToDataModel(Cart model);
-
     Cart mapToModel(CartDataModel dataModel);
 
 }

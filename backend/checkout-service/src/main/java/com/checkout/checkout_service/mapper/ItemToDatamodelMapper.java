@@ -7,8 +7,6 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface ItemToDatamodelMapper {
 
-    ItemDataModel mapToDataModel(Item model);
-
     Item mapToModel(ItemDataModel dataModel);
 
 }
