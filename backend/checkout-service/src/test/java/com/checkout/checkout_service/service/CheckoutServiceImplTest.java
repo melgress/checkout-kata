@@ -1,6 +1,8 @@
 package com.checkout.checkout_service.service;
 
 
+import com.checkout.checkout_service.api.response.CartItemResponse;
+import com.checkout.checkout_service.api.response.CheckoutResponse;
 import com.checkout.checkout_service.mapper.CartItemToDatamodelMapper;
 import com.checkout.checkout_service.mapper.CartToDatamodelMapper;
 import com.checkout.checkout_service.mapper.ItemToDatamodelMapper;
@@ -18,8 +20,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
+import static com.checkout.checkout_service.TestData.createCartItem;
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -132,6 +137,61 @@ public class CheckoutServiceImplTest {
         assertEquals(itemId, savedCartItem.getItem().getId());
         assertEquals(quantity, savedCartItem.getQuantity());
     }
+
+    @Test
+    void addItemToCartWhenItemNotFound() {
+        Long cartId = 123L;
+        Long itemId = 456L;
+        int quantity = 44;
+
+        when(cartRepository.findById(cartId)).thenReturn(Optional.of(CartDataModel.builder().build()));
+        when(itemRepository.findById(itemId)).thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () -> checkoutService.addItemToCart(cartId, itemId, quantity));
+
+    }
+
+    @Test
+    void checkoutWhenNoCartFound() {
+        long cartId = 333L;
+        when(cartRepository.findById(cartId)).thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () -> checkoutService.checkout(cartId));
+    }
+
+    @Test
+    void checkoutWhenCartIsEmpty() {
+        long cartId = 444L;
+        when(cartRepository.findById(cartId)).thenReturn(Optional.of(CartDataModel.builder().build()));
+
+        CheckoutResponse result = checkoutService.checkout(cartId);
+        verify(cartRepository, times(1)).findById(cartId);
+        assertThat(result.items()).isEqualTo(emptyList());
+        assertThat(result.totalPrice()).isEqualTo(0.00);
+    }
+
+    @Test
+    void checkoutWhenItemsInCart() {
+        long cartId = 555L;
+        CartItem cartItem = createCartItem();
+        when(cartRepository.findById(cartId)).thenReturn(
+                Optional.of(CartDataModel.builder().id(cartId).cartItems(List.of(
+                        cartItemToDatamodelMapper.mapToDataModel(cartItem)))
+                        .build()));
+        CartItemResponse expectedCartItemResponse = CartItemResponse.builder()
+                .itemName(cartItem.getItem().getName())
+                .itemPrice(cartItem.getItem().getPrice())
+                .totalItemPrice(cartItem.getTotalPrice())
+                .quantity(cartItem.getQuantity())
+                .build();
+
+        CheckoutResponse result = checkoutService.checkout(cartId);
+
+        verify(cartRepository, times(1)).findById(cartId);
+        assertThat(result.items()).isEqualTo(List.of(expectedCartItemResponse));
+        assertThat(result.totalPrice()).isEqualTo(cartItem.getTotalPrice());
+    }
+
 }
 
 

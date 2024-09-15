@@ -32,9 +32,9 @@ public class CheckoutController implements CheckoutApi{
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/checkout")
-    public ResponseEntity<CheckoutResponse> checkout() {
-        CheckoutResponse response = checkoutService.checkout();
+    @PostMapping("/checkout/{cartId}")
+    public ResponseEntity<CheckoutResponse> checkout(@PathVariable long cartId) {
+        CheckoutResponse response = checkoutService.checkout(cartId);
         return ResponseEntity.ok(response);
     }
 }

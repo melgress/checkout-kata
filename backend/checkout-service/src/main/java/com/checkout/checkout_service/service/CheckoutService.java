@@ -10,5 +10,5 @@ public interface CheckoutService {
 
     List<Item> getItems();
 
-    CheckoutResponse checkout();
+    CheckoutResponse checkout(long cartId);
 }

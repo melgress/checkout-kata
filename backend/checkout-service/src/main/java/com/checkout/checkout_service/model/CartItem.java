@@ -1,10 +1,14 @@
 package com.checkout.checkout_service.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class CartItem{
 
     private Long id;
@@ -12,14 +16,13 @@ public class CartItem{
     private Item item;
     private int quantity;
 
-    public CartItem(long cartId, Item item, int quantity) {
-        this.cartId = cartId;
-        this.item = item;
-        this.quantity = quantity;
-
-    }
-
-    public void incrementQuantity(int amount) {
-        this.quantity += amount;
+    public double getTotalPrice() {
+        if (Boolean.TRUE.equals(item.getIsOffer()) && quantity >= item.getOfferQuantity()) {
+            int offerSets = quantity / item.getOfferQuantity();
+            int remainingItems = quantity % item.getOfferQuantity();
+            return (offerSets * item.getOfferPrice()) + (remainingItems * item.getPrice());
+        } else {
+            return quantity * item.getPrice();
+        }
     }
 }

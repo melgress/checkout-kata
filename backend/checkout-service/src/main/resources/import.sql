@@ -1,6 +1,5 @@
-INSERT INTO item (name, price) VALUES ('Banana', 2.5);
-INSERT INTO item (name, price) VALUES ('Apple', 1.2);
-INSERT INTO item (name, price) VALUES ('Orange', 3.0);
-INSERT INTO item (name, price) VALUES ('Melon', 6.0);
-
-INSERT INTO cart (id) VALUES (1);
+INSERT INTO item (name, price, is_offer, offer_quantity, offer_price) VALUES ('Apple', 30, true, 2, 45);
+INSERT INTO item (name, price, is_offer, offer_quantity, offer_price) VALUES ('Banana', 50, true, 3, 130);
+INSERT INTO item (name, price) VALUES ('Peach', 60);
+INSERT INTO item (name, price) VALUES ('Kiwi', 20);
+INSERT INTO item (name, price) VALUES ('Melon', 10);

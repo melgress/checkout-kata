@@ -19,5 +19,15 @@ public class ItemDataModel {
     private Long id;
 
     private String name;
+
     private double price;
+
+    @Column(nullable = true)
+    private Boolean isOffer;
+
+    @Column(nullable = true)
+    private Integer offerQuantity;
+
+    @Column(nullable = true)
+    private Double offerPrice;
 }

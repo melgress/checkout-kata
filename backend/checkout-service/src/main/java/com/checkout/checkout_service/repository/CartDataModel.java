@@ -23,10 +23,5 @@ public class CartDataModel {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItemDataModel> cartItems = new ArrayList<>();
 
-    public void addCartItem(CartItemDataModel cartItem) {
-        this.cartItems.add(cartItem);
-        cartItem.setCart(this);
-    }
-
 
 }

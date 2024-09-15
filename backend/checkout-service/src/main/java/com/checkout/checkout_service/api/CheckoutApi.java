@@ -17,6 +17,6 @@ public interface CheckoutApi {
                                        @RequestParam Long itemId,
                                        @RequestParam int quantity);
 
-    @PostMapping("/checkout")
-    ResponseEntity<CheckoutResponse> checkout();
+    @PostMapping("/checkout/{cartId}")
+    ResponseEntity<CheckoutResponse> checkout(@PathVariable long cartId);
 }

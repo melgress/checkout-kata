@@ -1,8 +1,8 @@
 package com.checkout.checkout_service.api;
 
+import com.checkout.checkout_service.api.response.CartItemResponse;
 import com.checkout.checkout_service.api.response.CheckoutResponse;
 import com.checkout.checkout_service.model.Item;
-import com.checkout.checkout_service.model.Offer;
 import com.checkout.checkout_service.service.CheckoutService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,28 +58,38 @@ public class CheckoutControllerTest {
     }
 
     @Test
-    public void itShouldTestCheckout() throws Exception {
-        Item item1 = Item.builder().name("Banana").price(2.50).build();
-        Item item2 = Item.builder().name("Melon").price(4.50).build();
-        Offer offer = Offer.builder().itemName("Banana").discountPrice(130.0).quantityRequired(3).offerDescription("3 for 130").build();
-        CheckoutResponse response = new CheckoutResponse(List.of(item1, item2), 19.0, List.of(offer));
-
-        when(checkoutService.checkout()).thenReturn(response);
-
-        mockMvc.perform(post("/api/v1/checkout")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].name").value("Banana"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.items[1].name").value("Melon"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.totalPrice").value(19.0))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.applicableOffers[0].offerDescription").value("3 for 130"));
-    }
-
-    @Test
     public void shouldAddItemToCart() throws Exception {
         mockMvc.perform(post("/api/v1/cart/1/add")
                         .param("itemId", "1")
                         .param("quantity", "3"))
                 .andExpect(status().isNoContent());
+    }
+
+
+    @Test
+    public void itShouldTestCheckout() throws Exception {
+        long cartId = 23L;
+        CheckoutResponse checkoutResponse =
+                CheckoutResponse.builder().items(
+                        List.of(CartItemResponse.builder()
+                                .itemName("Apple")
+                                .itemPrice(20.0)
+                                .quantity(5)
+                                .totalItemPrice(100.0)
+                                .build()))
+                        .totalPrice(100.0)
+                        .build();
+        when(checkoutService.checkout(cartId)).thenReturn(checkoutResponse);
+
+        mockMvc.perform(post("/api/v1/checkout/23")
+                        .accept(MediaType.APPLICATION_JSON)
+                .param("itemId", "134")
+                .param("quantity", "890"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].itemName").value("Apple"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].itemPrice").value("20.0"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].quantity").value("5"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].totalItemPrice").value("100.0"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.totalPrice").value("100.0"));
     }
 }

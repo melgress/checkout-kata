@@ -1,5 +1,6 @@
 package com.checkout.checkout_service.service;
 
+import com.checkout.checkout_service.api.response.CartItemResponse;
 import com.checkout.checkout_service.api.response.CheckoutResponse;
 import com.checkout.checkout_service.mapper.CartItemToDatamodelMapper;
 import com.checkout.checkout_service.mapper.CartToDatamodelMapper;
@@ -11,8 +12,10 @@ import com.checkout.checkout_service.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CheckoutServiceImpl implements CheckoutService {
@@ -30,7 +33,13 @@ public class CheckoutServiceImpl implements CheckoutService {
     private final CartItemRepository cartItemRepository;
 
 
-    public CheckoutServiceImpl(final ItemRepository itemRepository, ItemToDatamodelMapper itemMapper, CartRepository cartRepository, CartItemToDatamodelMapper cartItemToDatamodelMapper, CartToDatamodelMapper cartToDatamodelMapper, CartItemRepository cartItemRepository) {
+
+    public CheckoutServiceImpl(ItemRepository itemRepository,
+                               ItemToDatamodelMapper itemMapper,
+                               CartRepository cartRepository,
+                               CartItemToDatamodelMapper cartItemToDatamodelMapper,
+                               CartToDatamodelMapper cartToDatamodelMapper,
+                               CartItemRepository cartItemRepository) {
         this.itemRepository = itemRepository;
         this.itemMapper = itemMapper;
         this.cartRepository = cartRepository;
@@ -57,10 +66,7 @@ public class CheckoutServiceImpl implements CheckoutService {
             cartItem.setQuantity(cartItem.getQuantity() + quantity);
             cartItemRepository.save(cartItemToDatamodelMapper.mapToDataModel(cartItem));
         } else {
-            CartItem cartItem = new CartItem();
-            cartItem.setCartId(cart.getId());
-            cartItem.setItem(item);
-            cartItem.setQuantity(quantity);
+            CartItem cartItem = CartItem.builder().cartId(cart.getId()).item(item).quantity(quantity).build();
             cartItemRepository.save(cartItemToDatamodelMapper.mapToDataModel(cartItem));
         }
 }
@@ -71,7 +77,26 @@ public List<Item> getItems() {
 }
 
 @Override
-public CheckoutResponse checkout() {
-    return null;
+public CheckoutResponse checkout(long cartId) {
+    Cart cart = cartToDatamodelMapper.mapToModel(cartRepository.findById(cartId)
+            .orElseThrow(() -> new IllegalArgumentException("Cart not found")));
+
+    List<CartItemResponse> itemResponses = Optional.ofNullable(cart.getCartItems())
+            .orElse(Collections.emptyList())
+            .stream()
+            .map(cartItem -> new CartItemResponse(
+                    cartItem.getItem().getName(),
+                    cartItem.getItem().getPrice(),
+                    cartItem.getQuantity(),
+                    cartItem.getTotalPrice()
+            ))
+            .collect(Collectors.toList());
+
+    double totalCartPrice = Optional.ofNullable(cart.getCartItems())
+            .filter(cartItems -> !cartItems.isEmpty())
+            .map(cartItems -> cart.calculateTotalPrice())
+            .orElse(0.00);
+
+    return new CheckoutResponse(itemResponses, totalCartPrice);
 }
 }
