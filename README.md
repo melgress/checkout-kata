@@ -30,7 +30,7 @@ the db schema is available at the h2 console: http://localhost:8080/h2-console
  the application provides three endpoints:
  ### GET http://localhost:8080/api/v1/items
  provides the list of all items with their price and offer as shown in the table above
- ### POST http://localhost:8080/api/v1/cart/{cartId}/add?itemId=?&quantity=?
+ ### POST http://localhost:8080/api/v1/cart/{cartId}?itemId=?&quantity=?
  adds an item to the cart
  ### POST http://localhost:8080/api/v1/checkout/{cartId} 
  checks out, meaning all items in cart, their prices and quantity as well as the total price is shown

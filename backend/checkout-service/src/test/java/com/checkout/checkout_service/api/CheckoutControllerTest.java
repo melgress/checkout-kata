@@ -34,7 +34,7 @@ public class CheckoutControllerTest {
         Long itemId = 123L;
         int quantity = 3;
 
-        mockMvc.perform(post("/api/v1/cart/{cartId}/add", cartId)
+        mockMvc.perform(post("/api/v1/cart/{cartId}", cartId)
                         .param("itemId", String.valueOf(itemId))
                         .param("quantity", String.valueOf(quantity))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -58,33 +58,24 @@ public class CheckoutControllerTest {
     }
 
     @Test
-    public void shouldAddItemToCart() throws Exception {
-        mockMvc.perform(post("/api/v1/cart/1/add")
-                        .param("itemId", "1")
-                        .param("quantity", "3"))
-                .andExpect(status().isNoContent());
-    }
-
-
-    @Test
     public void itShouldTestCheckout() throws Exception {
         long cartId = 23L;
         CheckoutResponse checkoutResponse =
                 CheckoutResponse.builder().items(
-                        List.of(CartItemResponse.builder()
-                                .itemName("Apple")
-                                .itemPrice(20.0)
-                                .quantity(5)
-                                .totalItemPrice(100.0)
-                                .build()))
+                                List.of(CartItemResponse.builder()
+                                        .itemName("Apple")
+                                        .itemPrice(20.0)
+                                        .quantity(5)
+                                        .totalItemPrice(100.0)
+                                        .build()))
                         .totalPrice(100.0)
                         .build();
         when(checkoutService.checkout(cartId)).thenReturn(checkoutResponse);
 
         mockMvc.perform(post("/api/v1/checkout/23")
                         .accept(MediaType.APPLICATION_JSON)
-                .param("itemId", "134")
-                .param("quantity", "890"))
+                        .param("itemId", "134")
+                        .param("quantity", "890"))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].itemName").value("Apple"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].itemPrice").value("20.0"))

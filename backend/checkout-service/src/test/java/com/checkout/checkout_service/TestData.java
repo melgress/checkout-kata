@@ -20,7 +20,7 @@ public class TestData {
     }
 
     public static CartItem createCartItem() {
-       return CartItem.builder()
+        return CartItem.builder()
                 .cartId(12L)
                 .item(createItem())
                 .quantity(5)
@@ -28,7 +28,7 @@ public class TestData {
     }
 
     public static ItemDataModel createItemDataModel() {
-       return ItemDataModel.builder()
+        return ItemDataModel.builder()
                 .id(999L)
                 .name("Melon")
                 .price(10.0)

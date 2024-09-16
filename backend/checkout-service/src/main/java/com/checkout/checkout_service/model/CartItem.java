@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class CartItem{
+public class CartItem {
 
     private Long id;
     private long cartId;

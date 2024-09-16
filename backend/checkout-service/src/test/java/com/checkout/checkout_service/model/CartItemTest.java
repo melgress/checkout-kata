@@ -19,17 +19,17 @@ class CartItemTest {
 
     @Test
     void getTotalPriceWhenDiscount() {
-       double result = cartItem.getTotalPrice();
+        double result = cartItem.getTotalPrice();
 
-       assertEquals(120, result);
+        assertEquals(120, result);
     }
 
     @Test
     void getTotalPriceWhenNoDiscount() {
         apple.setIsOffer(Boolean.FALSE);
-       double result = cartItem.getTotalPrice();
+        double result = cartItem.getTotalPrice();
 
-       assertEquals(150, result);
+        assertEquals(150, result);
     }
 
     @Test

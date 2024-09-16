@@ -33,7 +33,6 @@ public class CheckoutServiceImpl implements CheckoutService {
     private final CartItemRepository cartItemRepository;
 
 
-
     public CheckoutServiceImpl(ItemRepository itemRepository,
                                ItemToDatamodelMapper itemMapper,
                                CartRepository cartRepository,
@@ -69,34 +68,34 @@ public class CheckoutServiceImpl implements CheckoutService {
             CartItem cartItem = CartItem.builder().cartId(cart.getId()).item(item).quantity(quantity).build();
             cartItemRepository.save(cartItemToDatamodelMapper.mapToDataModel(cartItem));
         }
-}
+    }
 
-@Override
-public List<Item> getItems() {
-    return itemRepository.findAll().stream().map(itemMapper::mapToModel).toList();
-}
+    @Override
+    public List<Item> getItems() {
+        return itemRepository.findAll().stream().map(itemMapper::mapToModel).toList();
+    }
 
-@Override
-public CheckoutResponse checkout(long cartId) {
-    Cart cart = cartToDatamodelMapper.mapToModel(cartRepository.findById(cartId)
-            .orElseThrow(() -> new IllegalArgumentException("Cart not found")));
+    @Override
+    public CheckoutResponse checkout(long cartId) {
+        Cart cart = cartToDatamodelMapper.mapToModel(cartRepository.findById(cartId)
+                .orElseThrow(() -> new IllegalArgumentException("Cart not found")));
 
-    List<CartItemResponse> itemResponses = Optional.ofNullable(cart.getCartItems())
-            .orElse(Collections.emptyList())
-            .stream()
-            .map(cartItem -> new CartItemResponse(
-                    cartItem.getItem().getName(),
-                    cartItem.getItem().getPrice(),
-                    cartItem.getQuantity(),
-                    cartItem.getTotalPrice()
-            ))
-            .collect(Collectors.toList());
+        List<CartItemResponse> itemResponses = Optional.ofNullable(cart.getCartItems())
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(cartItem -> new CartItemResponse(
+                        cartItem.getItem().getName(),
+                        cartItem.getItem().getPrice(),
+                        cartItem.getQuantity(),
+                        cartItem.getTotalPrice()
+                ))
+                .collect(Collectors.toList());
 
-    double totalCartPrice = Optional.ofNullable(cart.getCartItems())
-            .filter(cartItems -> !cartItems.isEmpty())
-            .map(cartItems -> cart.calculateTotalPrice())
-            .orElse(0.00);
+        double totalCartPrice = Optional.ofNullable(cart.getCartItems())
+                .filter(cartItems -> !cartItems.isEmpty())
+                .map(cartItems -> cart.calculateTotalPrice())
+                .orElse(0.00);
 
-    return new CheckoutResponse(itemResponses, totalCartPrice);
-}
+        return new CheckoutResponse(itemResponses, totalCartPrice);
+    }
 }

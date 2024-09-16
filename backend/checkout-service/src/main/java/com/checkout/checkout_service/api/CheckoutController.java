@@ -24,12 +24,12 @@ public class CheckoutController implements CheckoutApi{
         return ResponseEntity.ok(items);
     }
 
-    @PostMapping("/cart/{cartId}/add")
+    @PostMapping("/cart/{cartId}")
     public ResponseEntity<Void> addItemToCart(@PathVariable Long cartId,
                                               @RequestParam Long itemId,
                                               @RequestParam int quantity) {
        checkoutService.addItemToCart(cartId, itemId, quantity);
-        return ResponseEntity.noContent().build();
+       return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/checkout/{cartId}")

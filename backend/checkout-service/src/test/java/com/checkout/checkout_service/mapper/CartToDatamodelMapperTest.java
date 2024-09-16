@@ -35,14 +35,14 @@ class CartToDatamodelMapperTest {
         Cart result = mapper.mapToModel(cartDataModel);
         CartItem cartItem = result.getCartItems().get(0);
         assertEquals(cartDataModel.getId(), result.getId());
-        assertEquals(cartDataModel.getCartItems().get(0).getId() , cartItem.getId());
-        assertEquals(cartDataModel.getCartItems().get(0).getQuantity() , cartItem.getQuantity());
-        assertEquals(cartDataModel.getCartItems().get(0).getItem().getId() , cartItem.getItem().getId());
-        assertEquals(cartDataModel.getCartItems().get(0).getItem().getName() , cartItem.getItem().getName());
-        assertEquals(cartDataModel.getCartItems().get(0).getItem().getPrice() , cartItem.getItem().getPrice());
-        assertEquals(cartDataModel.getCartItems().get(0).getItem().getIsOffer() , cartItem.getItem().getIsOffer());
-        assertEquals(cartDataModel.getCartItems().get(0).getItem().getOfferPrice() , cartItem.getItem().getOfferPrice());
-        assertEquals(cartDataModel.getCartItems().get(0).getItem().getOfferQuantity() , cartItem.getItem().getOfferQuantity());
+        assertEquals(cartDataModel.getCartItems().get(0).getId(), cartItem.getId());
+        assertEquals(cartDataModel.getCartItems().get(0).getQuantity(), cartItem.getQuantity());
+        assertEquals(cartDataModel.getCartItems().get(0).getItem().getId(), cartItem.getItem().getId());
+        assertEquals(cartDataModel.getCartItems().get(0).getItem().getName(), cartItem.getItem().getName());
+        assertEquals(cartDataModel.getCartItems().get(0).getItem().getPrice(), cartItem.getItem().getPrice());
+        assertEquals(cartDataModel.getCartItems().get(0).getItem().getIsOffer(), cartItem.getItem().getIsOffer());
+        assertEquals(cartDataModel.getCartItems().get(0).getItem().getOfferPrice(), cartItem.getItem().getOfferPrice());
+        assertEquals(cartDataModel.getCartItems().get(0).getItem().getOfferQuantity(), cartItem.getItem().getOfferQuantity());
     }
 
 

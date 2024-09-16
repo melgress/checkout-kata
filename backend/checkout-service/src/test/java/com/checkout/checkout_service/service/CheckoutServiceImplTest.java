@@ -38,7 +38,7 @@ public class CheckoutServiceImplTest {
     @Mock
     CartRepository cartRepository;
 
-    CartItemToDatamodelMapper cartItemToDatamodelMapper = Mappers.getMapper(CartItemToDatamodelMapper.class)    ;
+    CartItemToDatamodelMapper cartItemToDatamodelMapper = Mappers.getMapper(CartItemToDatamodelMapper.class);
 
     CartToDatamodelMapper cartToDatamodelMapper = Mappers.getMapper(CartToDatamodelMapper.class);
 
@@ -49,7 +49,7 @@ public class CheckoutServiceImplTest {
     CheckoutService checkoutService;
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         checkoutService = new CheckoutServiceImpl(itemRepository, itemMapper, cartRepository, cartItemToDatamodelMapper, cartToDatamodelMapper, cartItemRepository);
     }
 
@@ -68,7 +68,7 @@ public class CheckoutServiceImplTest {
 
     @Test
     void addItemToCartWhenCartExistsAndItemExists() {
-        Long cartId =55L;
+        Long cartId = 55L;
         Long itemId = 66L;
         int quantity = 5;
 
@@ -176,7 +176,7 @@ public class CheckoutServiceImplTest {
         CartItem cartItem = createCartItem();
         when(cartRepository.findById(cartId)).thenReturn(
                 Optional.of(CartDataModel.builder().id(cartId).cartItems(List.of(
-                        cartItemToDatamodelMapper.mapToDataModel(cartItem)))
+                                cartItemToDatamodelMapper.mapToDataModel(cartItem)))
                         .build()));
         CartItemResponse expectedCartItemResponse = CartItemResponse.builder()
                 .itemName(cartItem.getItem().getName())
